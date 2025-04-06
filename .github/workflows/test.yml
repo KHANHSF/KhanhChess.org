@@ -32,9 +32,6 @@ jobs:
     - name: Install sbt
       uses: coursier/setup-action@v1
 
-    - name: Fetch Prebuilt Assets
-      run: ./bin/fetch-prebuilt
-
     - name: Compile Project
       run: sbt compile
 
