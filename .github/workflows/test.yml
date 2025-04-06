@@ -1,0 +1,42 @@
+name: Build KhanhChess
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # 👈 CHÍNH LÀ DÒNG NÀY nè ông
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis
+        ports: ['6379:6379']
+      mongo:
+        image: mongo
+        ports: ['27017:27017']
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Set up Java 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Install sbt
+      uses: coursier/setup-action@v1
+
+    - name: Fetch Prebuilt Assets
+      run: ./bin/fetch-prebuilt
+
+    - name: Compile Project
+      run: sbt compile
+
+    - name: Run Tests (optional)
+      run: sbt test
